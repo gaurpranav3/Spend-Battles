@@ -6,18 +6,19 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
   <!-- CSS -->
-  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="/css/style.css" />
 
   <!-- Supabase -->
   <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
-  <script src="js/supabase.js"></script>
+  <script src="/js/supabase.js"></script>
 </head>
 
 <body>
+
   <!-- HEADER -->
   <header class="top-bar">
     <div class="welcome">
-      👋 <strong>Welcome</strong>
+      👋 Welcome
     </div>
     <button class="logout-btn" onclick="logout()">Logout</button>
   </header>
@@ -25,36 +26,44 @@
   <!-- MAIN -->
   <main class="container">
 
-    <!-- TODAY CARD -->
+    <!-- TODAY -->
     <section class="card big">
       <h3>Today's Spend</h3>
       <div class="amount">
         ₹ <span id="todaySpend">0</span>
       </div>
-      <p class="muted">Edit anytime</p>
+      <p class="muted">Overwrite anytime</p>
     </section>
 
-    <!-- STATS -->
+    <!-- WEEK + TARGET -->
     <section class="stats">
       <div class="card">
         <h4>This Week</h4>
-        <div class="amount-small">₹ <span id="weekSpend">0</span></div>
+        <div class="amount-small">
+          ₹ <span id="weekSpend">0</span>
+        </div>
       </div>
 
       <div class="card">
         <h4>Daily Target</h4>
-        <div class="amount-small">₹ <span id="dailyTarget">500</span></div>
+        <div class="amount-small">
+          ₹ <span id="dailyTarget">500</span>
+        </div>
       </div>
+    </section>
 
-      <div class="card">
-        <h4>Streak</h4>
-        <div class="amount-small">🔥 <span id="streak">0</span></div>
+    <!-- PROGRESS -->
+    <section class="card">
+      <h4>Today vs Target</h4>
+      <div class="progress-bar">
+        <div id="progressFill"></div>
       </div>
+      <p class="muted" id="progressText">Log today’s spend</p>
     </section>
 
     <!-- LOG FORM -->
     <section class="card">
-      <h3>Log today’s spend</h3>
+      <h3>Log Today</h3>
 
       <input
         id="amount"
@@ -80,7 +89,7 @@
       </div>
 
       <button class="primary-btn" onclick="saveSpend()">
-        Save entry
+        Save Entry
       </button>
 
       <p id="saveStatus" class="status-text"></p>
@@ -89,9 +98,6 @@
   </main>
 
   <!-- JS -->
-  <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
-  <script src="js/supabase.js"></script>
-  <script src="js/dashboard.js"></script>
-
+  <script src="/js/dashboard.js"></script>
 </body>
 </html>
