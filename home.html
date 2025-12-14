@@ -3,76 +3,92 @@
 <head>
   <meta charset="UTF-8" />
   <title>Spend Battles — Home</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
+  <!-- CSS -->
   <link rel="stylesheet" href="css/style.css" />
 
   <!-- Supabase -->
   <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
-
-  <!-- App JS -->
-  <script src="js/supabase.js" defer></script>
-  <script src="js/dashboard.js" defer></script>
+  <script src="js/supabase.js"></script>
 </head>
 
 <body>
+  <!-- HEADER -->
+  <header class="top-bar">
+    <div class="welcome">
+      👋 <strong>Welcome</strong>
+    </div>
+    <button class="logout-btn" onclick="logout()">Logout</button>
+  </header>
 
-  <div class="dashboard">
+  <!-- MAIN -->
+  <main class="container">
 
-    <!-- HEADER -->
-    <header class="dash-header">
-      <h2>👋 Welcome</h2>
-      <button onclick="logout()" class="logout-btn">Logout</button>
-    </header>
-
-    <!-- TODAY -->
-    <section class="card highlight">
-      <p class="label">Today’s Spend</p>
-      <h1>₹ <span id="todaySpend">0</span></h1>
-      <small>Edit anytime</small>
+    <!-- TODAY CARD -->
+    <section class="card big">
+      <h3>Today's Spend</h3>
+      <div class="amount">
+        ₹ <span id="todaySpend">0</span>
+      </div>
+      <p class="muted">Edit anytime</p>
     </section>
 
     <!-- STATS -->
     <section class="stats">
       <div class="card">
-        <p>This Week</p>
-        <h3>₹ <span id="weekSpend">0</span></h3>
+        <h4>This Week</h4>
+        <div class="amount-small">₹ <span id="weekSpend">0</span></div>
       </div>
+
       <div class="card">
-        <p>Daily Target</p>
-        <h3>₹ 500</h3>
+        <h4>Daily Target</h4>
+        <div class="amount-small">₹ <span id="dailyTarget">500</span></div>
       </div>
+
       <div class="card">
-        <p>Streak</p>
-        <h3>🔥 0</h3>
+        <h4>Streak</h4>
+        <div class="amount-small">🔥 <span id="streak">0</span></div>
       </div>
     </section>
 
-    <!-- LOG SPEND -->
+    <!-- LOG FORM -->
     <section class="card">
       <h3>Log today’s spend</h3>
 
-      <input id="amount" type="number" placeholder="Amount (₹)" />
-      <select id="category">
-        <option>Food</option>
-        <option>Travel</option>
-        <option>Shopping</option>
-        <option>Other</option>
-      </select>
+      <input
+        id="amount"
+        type="number"
+        placeholder="Enter amount"
+        min="0"
+      />
 
-      <select id="mood">
-        <option>Neutral</option>
-        <option>Happy</option>
-        <option>Guilty</option>
-        <option>Proud</option>
-      </select>
+      <div class="row">
+        <select id="category">
+          <option value="Food">Food</option>
+          <option value="Travel">Travel</option>
+          <option value="Shopping">Shopping</option>
+          <option value="Other">Other</option>
+        </select>
 
-      <button onclick="saveSpend()">Save entry</button>
+        <select id="mood">
+          <option value="Neutral">Neutral</option>
+          <option value="Happy">Happy</option>
+          <option value="Guilty">Guilty</option>
+          <option value="Proud">Proud</option>
+        </select>
+      </div>
 
-      <p id="saveStatus" class="status"></p>
+      <button class="primary-btn" onclick="saveSpend()">
+        Save entry
+      </button>
+
+      <p id="saveStatus" class="status-text"></p>
     </section>
 
-  </div>
+  </main>
 
+  <!-- JS -->
+  <script src="js/dashboard.js"></script>
 </body>
 </html>
