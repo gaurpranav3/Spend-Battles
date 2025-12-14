@@ -1,1 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Spend Battles — Home</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
 
+  <link rel="stylesheet" href="css/style.css" />
+
+  <!-- Supabase -->
+  <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+
+  <!-- App JS -->
+  <script src="js/supabase.js" defer></script>
+  <script src="js/dashboard.js" defer></script>
+</head>
+
+<body>
+
+  <div class="dashboard">
+
+    <!-- HEADER -->
+    <header class="dash-header">
+      <h2>👋 Welcome</h2>
+      <button onclick="logout()" class="logout-btn">Logout</button>
+    </header>
+
+    <!-- TODAY -->
+    <section class="card highlight">
+      <p class="label">Today’s Spend</p>
+      <h1>₹ <span id="todaySpend">0</span></h1>
+      <small>Edit anytime</small>
+    </section>
+
+    <!-- STATS -->
+    <section class="stats">
+      <div class="card">
+        <p>This Week</p>
+        <h3>₹ <span id="weekSpend">0</span></h3>
+      </div>
+      <div class="card">
+        <p>Daily Target</p>
+        <h3>₹ 500</h3>
+      </div>
+      <div class="card">
+        <p>Streak</p>
+        <h3>🔥 0</h3>
+      </div>
+    </section>
+
+    <!-- LOG SPEND -->
+    <section class="card">
+      <h3>Log today’s spend</h3>
+
+      <input id="amount" type="number" placeholder="Amount (₹)" />
+      <select id="category">
+        <option>Food</option>
+        <option>Travel</option>
+        <option>Shopping</option>
+        <option>Other</option>
+      </select>
+
+      <select id="mood">
+        <option>Neutral</option>
+        <option>Happy</option>
+        <option>Guilty</option>
+        <option>Proud</option>
+      </select>
+
+      <button onclick="saveSpend()">Save entry</button>
+
+      <p id="saveStatus" class="status"></p>
+    </section>
+
+  </div>
+
+</body>
+</html>
