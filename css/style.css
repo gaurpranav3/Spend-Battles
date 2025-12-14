@@ -100,3 +100,50 @@ button:hover {
   font-size: 0.85rem;
   color: var(--muted);
 }
+
+.dashboard {
+  max-width: 480px;
+  margin: auto;
+  padding: 24px;
+}
+
+.dash-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.logout-btn {
+  background: transparent;
+  color: var(--muted);
+  font-weight: 600;
+}
+
+.card {
+  background: white;
+  border-radius: 16px;
+  padding: 18px;
+  margin-bottom: 16px;
+  box-shadow: var(--shadow);
+}
+
+.highlight h1 {
+  font-size: 2.2rem;
+  margin: 8px 0;
+}
+
+.label {
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+
+.stats h3 {
+  margin-top: 6px;
+}
