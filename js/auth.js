@@ -5,9 +5,9 @@ async function signUp() {
 
   status.innerText = "Creating account...";
 
-  const { error } = await supabaseClient.auth.signUp({
+  const { error } = await supabase.auth.signUp({
     email,
-    password
+    password,
   });
 
   if (error) {
@@ -24,9 +24,9 @@ async function signIn() {
 
   status.innerText = "Signing in...";
 
-  const { error } = await supabaseClient.auth.signInWithPassword({
+  const { error } = await supabase.auth.signInWithPassword({
     email,
-    password
+    password,
   });
 
   if (error) {
