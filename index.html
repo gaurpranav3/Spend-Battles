@@ -2,43 +2,55 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Spend Battles</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Spend Battles — Login</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
   <!-- CSS -->
   <link rel="stylesheet" href="css/style.css" />
 
-  <!-- Supabase SDK -->
+  <!-- Supabase -->
   <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
-
-  <!-- App JS -->
-  <script src="js/supabase.js" defer></script>
-  <script src="js/auth.js" defer></script>
+  <script src="js/supabase.js"></script>
 </head>
 
 <body>
-
-  <div class="auth-wrapper">
-    <div class="auth-card">
-
-      <h1 class="logo">Spend Battles</h1>
-      <p class="tagline">Track daily spends. Beat your own target.</p>
-
-      <input id="email" type="email" placeholder="Email address" />
-      <input id="password" type="password" placeholder="Password" />
-
-      <button id="primaryBtn" onclick="signUp()">Create account</button>
-
-      <p class="switch">
-        Already have an account?
-        <span onclick="signIn()">Sign in</span>
+  <main class="container" style="min-height:100vh;display:flex;align-items:center;">
+    <section class="card big" style="width:100%;">
+      <h2 style="text-align:center;margin-bottom:6px;">Spend Battles</h2>
+      <p class="muted" style="text-align:center;margin-bottom:20px;">
+        Track daily spends. Beat your own target.
       </p>
 
-      <p id="authStatus" class="status"></p>
+      <input
+        id="email"
+        type="email"
+        placeholder="Email address"
+      />
 
-    </div>
-  </div>
+      <input
+        id="password"
+        type="password"
+        placeholder="Password"
+      />
 
+      <button class="primary-btn" onclick="signUp()">
+        Create account
+      </button>
+
+      <p class="muted" style="text-align:center;margin-top:12px;">
+        Already have an account?
+        <span
+          style="color:#6f6bff;cursor:pointer;"
+          onclick="signIn()"
+        >
+          Sign in
+        </span>
+      </p>
+
+      <p id="authStatus" class="status-text" style="color:#e74c3c;"></p>
+    </section>
+  </main>
+
+  <script src="js/auth.js"></script>
 </body>
 </html>
-
