@@ -24,7 +24,7 @@ function getMonday(date = new Date()) {
 }
 
 /*************************
-  ENSURE WEEKLY PLAN EXISTS
+  ENSURE WEEKLY PLAN EXISTS (GOALS)
 *************************/
 async function ensureWeeklyPlan() {
   const { data: userData } = await supabase.auth.getUser();
@@ -46,12 +46,12 @@ async function ensureWeeklyPlan() {
 }
 
 /*************************
-  LOAD DAILY TARGET
+  LOAD DAILY TARGET (FROM GOAL)
 *************************/
 async function loadDailyTarget() {
   const { data: userData } = await supabase.auth.getUser();
   const user = userData.user;
-  if (!user) return;
+  if (!user) return 0;
 
   const monday = getMonday().toISOString().split("T")[0];
 
@@ -62,42 +62,35 @@ async function loadDailyTarget() {
     .eq("week_start", monday)
     .single();
 
-  if (error || !data) return;
+  if (error || !data) return 0;
 
-  const daily = Math.round(data.weekly_spend / 7);
-  document.getElementById("dailyTarget").innerText = daily;
+  const dailyTarget = Math.round(data.weekly_spend / 7);
+  document.getElementById("dailyTarget").innerText = dailyTarget;
+  return dailyTarget;
 }
 
 /*************************
-  LOAD TODAY'S SPEND
+  LOAD TODAY'S SPEND (ACTUAL)
 *************************/
-async function loadTodaySpend() {
+async function loadTodaySpend(dailyTarget) {
   const { data: userData } = await supabase.auth.getUser();
   const user = userData.user;
   if (!user) return;
 
   const today = todayDate();
 
-  const { data, error } = await supabase
+  const { data } = await supabase
     .from("spends")
     .select("amount")
     .eq("user_id", user.id)
     .eq("date", today)
     .single();
 
-  if (error && error.code !== "PGRST116") {
-    console.error(error);
-    return;
-  }
-
   const todayAmount = data ? Number(data.amount) : 0;
   document.getElementById("todaySpend").innerText = todayAmount;
 
-  const dailyTarget = Number(
-    document.getElementById("dailyTarget").innerText
-  );
-
   updateProgressBar(todayAmount, dailyTarget);
+  roastUser(todayAmount, dailyTarget);
 }
 
 /*************************
@@ -120,22 +113,9 @@ async function saveSpend() {
 
   const today = todayDate();
 
-  const { data: existing, error: fetchError } = await supabase
+  await supabase
     .from("spends")
-    .select("id")
-    .eq("user_id", user.id)
-    .eq("date", today)
-    .single();
-
-  let result;
-
-  if (existing && !fetchError) {
-    result = await supabase
-      .from("spends")
-      .update({ amount, category, mood })
-      .eq("id", existing.id);
-  } else {
-    result = await supabase.from("spends").insert([
+    .upsert(
       {
         user_id: user.id,
         amount,
@@ -143,21 +123,19 @@ async function saveSpend() {
         mood,
         date: today,
       },
-    ]);
-  }
+      { onConflict: "user_id,date" }
+    );
 
-  if (result.error) {
-    status.innerText = result.error.message;
-  } else {
-    status.innerText = "Saved successfully ✅";
-    document.getElementById("amount").value = "";
-    loadTodaySpend();
-    loadWeekSpend();
-  }
+  status.innerText = "Saved successfully ✅";
+  document.getElementById("amount").value = "";
+
+  const dailyTarget = await loadDailyTarget();
+  await loadTodaySpend(dailyTarget);
+  await loadWeekSpend();
 }
 
 /*************************
-  LOAD THIS WEEK TOTAL
+  LOAD THIS WEEK TOTAL (ACTUAL)
 *************************/
 async function loadWeekSpend() {
   const { data: userData } = await supabase.auth.getUser();
@@ -172,17 +150,14 @@ async function loadWeekSpend() {
     .eq("user_id", user.id)
     .gte("date", monday);
 
-  if (error) {
-    console.error(error);
-    return;
-  }
+  if (error) return;
 
   const total = data.reduce((sum, e) => sum + Number(e.amount), 0);
   document.getElementById("weekSpend").innerText = total;
 }
 
 /*************************
-  PROGRESS BAR
+  PROGRESS BAR + TEXT
 *************************/
 function updateProgressBar(todaySpend, dailyTarget) {
   if (!dailyTarget || dailyTarget <= 0) return;
@@ -193,15 +168,46 @@ function updateProgressBar(todaySpend, dailyTarget) {
 
   bar.style.width = percent + "%";
 
-  if (todaySpend <= dailyTarget * 0.7) {
+  if (todaySpend <= dailyTarget * 0.5) {
     bar.style.background = "#2ecc71";
-    text.innerText = "Good control today 🟢";
+    text.innerText = "Bro are you even living? 💀";
   } else if (todaySpend <= dailyTarget) {
-    bar.style.background = "#f1c40f";
-    text.innerText = "Close to target 🟡";
+    bar.style.background = "#27ae60";
+    text.innerText = "Control game strong 🧠";
+  } else if (todaySpend <= dailyTarget * 1.2) {
+    bar.style.background = "#f39c12";
+    text.innerText = "Weak discipline 😬";
   } else {
     bar.style.background = "#e74c3c";
-    text.innerText = "Over target 🔴";
+    text.innerText = "Bro who hurt you? 💸🔥";
+  }
+}
+
+/*************************
+  ROAST COPY
+*************************/
+function roastUser(today, target) {
+  const title = document.getElementById("roastTitle");
+  const sub = document.getElementById("roastSub");
+
+  if (!today) {
+    title.innerText = "Don’t run. Log it.";
+    sub.innerText = "Ignoring it doesn’t make it cheaper.";
+    return;
+  }
+
+  if (today <= target * 0.5) {
+    title.innerText = "Bro are you even living? 💀";
+    sub.innerText = "Monk-level spending today.";
+  } else if (today <= target) {
+    title.innerText = "Control game strong 🧠";
+    sub.innerText = "You stayed under the line.";
+  } else if (today <= target * 1.2) {
+    title.innerText = "Hmm… weak discipline 😬";
+    sub.innerText = "Recoverable. Don’t spiral.";
+  } else {
+    title.innerText = "Bro who hurt you? 💸🔥";
+    sub.innerText = "This was emotional damage.";
   }
 }
 
@@ -218,7 +224,7 @@ async function logout() {
 *************************/
 (async function init() {
   await ensureWeeklyPlan();
-  await loadDailyTarget();
-  await loadTodaySpend();
+  const dailyTarget = await loadDailyTarget();
+  await loadTodaySpend(dailyTarget);
   await loadWeekSpend();
 })();
