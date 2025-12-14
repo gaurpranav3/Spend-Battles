@@ -1,5 +1,3 @@
-alert("auth.js loaded");
-
 async function signUp() {
   const email = document.getElementById("email").value;
   const password = document.getElementById("password").value;
