@@ -10,7 +10,7 @@ async function checkAuth() {
 checkAuth();
 
 /*************************
-  HELPERS
+  DATE HELPERS
 *************************/
 function todayDate() {
   return new Date().toISOString().split("T")[0];
@@ -24,8 +24,52 @@ function getMonday(date = new Date()) {
 }
 
 /*************************
+  ENSURE WEEKLY PLAN EXISTS
+*************************/
+async function ensureWeeklyPlan() {
+  const { data: userData } = await supabase.auth.getUser();
+  const user = userData.user;
+  if (!user) return;
+
+  const monday = getMonday().toISOString().split("T")[0];
+
+  const { data } = await supabase
+    .from("weekly_plan")
+    .select("id")
+    .eq("user_id", user.id)
+    .eq("week_start", monday)
+    .single();
+
+  if (!data) {
+    window.location.href = "/weekly.html";
+  }
+}
+
+/*************************
+  LOAD DAILY TARGET
+*************************/
+async function loadDailyTarget() {
+  const { data: userData } = await supabase.auth.getUser();
+  const user = userData.user;
+  if (!user) return;
+
+  const monday = getMonday().toISOString().split("T")[0];
+
+  const { data, error } = await supabase
+    .from("weekly_plan")
+    .select("weekly_spend")
+    .eq("user_id", user.id)
+    .eq("week_start", monday)
+    .single();
+
+  if (error || !data) return;
+
+  const daily = Math.round(data.weekly_spend / 7);
+  document.getElementById("dailyTarget").innerText = daily;
+}
+
+/*************************
   LOAD TODAY'S SPEND
-  (single value, overwrite)
 *************************/
 async function loadTodaySpend() {
   const { data: userData } = await supabase.auth.getUser();
@@ -120,14 +164,13 @@ async function loadWeekSpend() {
   const user = userData.user;
   if (!user) return;
 
-  const monday = getMonday();
-  const mondayStr = monday.toISOString().split("T")[0];
+  const monday = getMonday().toISOString().split("T")[0];
 
   const { data, error } = await supabase
     .from("spends")
     .select("amount")
     .eq("user_id", user.id)
-    .gte("date", mondayStr);
+    .gte("date", monday);
 
   if (error) {
     console.error(error);
@@ -139,7 +182,7 @@ async function loadWeekSpend() {
 }
 
 /*************************
-  PROGRESS BAR LOGIC
+  PROGRESS BAR
 *************************/
 function updateProgressBar(todaySpend, dailyTarget) {
   if (!dailyTarget || dailyTarget <= 0) return;
@@ -173,5 +216,9 @@ async function logout() {
 /*************************
   INIT
 *************************/
-loadTodaySpend();
-loadWeekSpend();
+(async function init() {
+  await ensureWeeklyPlan();
+  await loadDailyTarget();
+  await loadTodaySpend();
+  await loadWeekSpend();
+})();
