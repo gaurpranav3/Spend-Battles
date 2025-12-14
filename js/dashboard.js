@@ -1,24 +1,27 @@
-// 1️⃣ Protect page: user logged in hona chahiye
+// ==========================
+// AUTH PROTECTION
+// ==========================
 async function checkAuth() {
   const { data } = await supabase.auth.getSession();
-
   if (!data.session) {
     window.location.href = "index.html";
   }
 }
-
 checkAuth();
 
-// 2️⃣ Helper: aaj ki date (YYYY-MM-DD)
+// ==========================
+// HELPERS
+// ==========================
 function todayDate() {
   return new Date().toISOString().split("T")[0];
 }
 
-// 3️⃣ Aaj ka total spend nikaal ke dikhao
+// ==========================
+// LOAD TODAY'S SPEND (NOT SUM, SINGLE VALUE)
+// ==========================
 async function loadTodaySpend() {
   const { data: userData } = await supabase.auth.getUser();
   const user = userData.user;
-
   if (!user) return;
 
   const today = todayDate();
@@ -27,18 +30,20 @@ async function loadTodaySpend() {
     .from("spends")
     .select("amount")
     .eq("user_id", user.id)
-    .eq("date", today);
+    .eq("date", today)
+    .single();
 
-  if (error) {
+  if (error && error.code !== "PGRST116") {
     console.error(error);
     return;
   }
 
-  const total = data.reduce((sum, row) => sum + row.amount, 0);
-  document.getElementById("todaySpend").innerText = total;
+  document.getElementById("todaySpend").innerText = data ? data.amount : 0;
 }
 
-// 4️⃣ Save today’s spend
+// ==========================
+// SAVE / OVERWRITE TODAY'S SPEND
+// ==========================
 async function saveSpend() {
   const amount = Number(document.getElementById("amount").value);
   const category = document.getElementById("category").value;
@@ -52,34 +57,62 @@ async function saveSpend() {
 
   const { data: userData } = await supabase.auth.getUser();
   const user = userData.user;
-
   if (!user) return;
 
   const today = todayDate();
 
-  const { error } = await supabase.from("spends").insert([
-    {
-      user_id: user.id,
-      amount,
-      category,
-      mood,
-      date: today
-    }
-  ]);
+  // Check if today's entry already exists
+  const { data: existing, error: fetchError } = await supabase
+    .from("spends")
+    .select("id")
+    .eq("user_id", user.id)
+    .eq("date", today)
+    .single();
 
-  if (error) {
-    status.innerText = error.message;
+  let result;
+
+  if (existing && !fetchError) {
+    // UPDATE (overwrite)
+    result = await supabase
+      .from("spends")
+      .update({
+        amount,
+        category,
+        mood,
+      })
+      .eq("id", existing.id);
+  } else {
+    // INSERT (first entry of the day)
+    result = await supabase
+      .from("spends")
+      .insert([
+        {
+          user_id: user.id,
+          amount,
+          category,
+          mood,
+          date: today,
+        },
+      ]);
+  }
+
+  if (result.error) {
+    status.innerText = result.error.message;
   } else {
     status.innerText = "Saved successfully ✅";
-    loadTodaySpend(); // refresh total
+    loadTodaySpend();
   }
 }
 
-// 5️⃣ Logout
+// ==========================
+// LOGOUT
+// ==========================
 async function logout() {
   await supabase.auth.signOut();
   window.location.href = "index.html";
 }
 
-// Init
+// ==========================
+// INIT
+// ==========================
 loadTodaySpend();
