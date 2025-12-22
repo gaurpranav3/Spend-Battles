@@ -1,5 +1,4 @@
-// auth.js
-// IMPORTANT: Supabase client is available as window.sb (from supabase.js)
+// js/auth.js
 
 async function signUp() {
   const email = document.getElementById("email").value;
@@ -8,17 +7,14 @@ async function signUp() {
 
   status.innerText = "Creating account...";
 
-  const { data, error } = await sb.auth.signUp({
-    email,
-    password,
-  });
+  const { error } = await sb.auth.signUp({ email, password });
 
   if (error) {
     status.innerText = error.message;
     return;
   }
 
-  status.innerText = "Account created. You can sign in now.";
+  status.innerText = "Account created. You can sign in.";
 }
 
 async function signIn() {
@@ -28,7 +24,7 @@ async function signIn() {
 
   status.innerText = "Signing in...";
 
-  const { data, error } = await sb.auth.signInWithPassword({
+  const { error } = await sb.auth.signInWithPassword({
     email,
     password,
   });
