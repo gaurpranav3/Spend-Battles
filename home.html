@@ -3,76 +3,46 @@
 <head>
   <meta charset="UTF-8" />
   <title>Spend Battles</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link rel="stylesheet" href="./css/style.css" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="css/style.css" />
+
+  <!-- Supabase -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="js/supabase.js"></script>
 </head>
+
 <body>
+  <div class="top-bar">
+    <h3>👋 Welcome</h3>
+    <button class="logout-btn" onclick="sb.auth.signOut()">Logout</button>
+  </div>
 
-  <div class="app">
+  <main class="container">
 
-    <!-- HEADER -->
-    <header class="topbar">
-      <h2>👋 Welcome</h2>
-      <button id="logoutBtn">Logout</button>
-    </header>
+    <div class="card big">
+      <h4>Today’s Spend</h4>
+      <div class="amount">₹ 0</div>
+      <p class="muted">Log honestly.</p>
+    </div>
 
-    <!-- TODAY -->
-    <section class="card big">
-      <h3>Today’s Spend</h3>
-      <div class="amount">₹ <span id="todaySpend">0</span></div>
-      <p class="muted">Overwrite anytime</p>
-    </section>
-
-    <!-- STATS -->
-    <section class="stats">
+    <div class="stats">
       <div class="card">
-        <h4>This Week (Actual)</h4>
-        <div class="amount-sm">₹ <span id="weekSpend">0</span></div>
+        <h4>This Week</h4>
+        <div class="amount-small">₹ 0</div>
       </div>
 
       <div class="card">
         <h4>Daily Target</h4>
-        <div class="amount-sm">₹ <span id="dailyTarget">0</span></div>
-        <p class="muted">From your weekly plan</p>
+        <div class="amount-small">₹ 0</div>
       </div>
-    </section>
+    </div>
 
-    <!-- ROAST -->
-    <section class="card roast">
-      <h3 id="roastTitle">Don’t run. Log it.</h3>
-      <p id="roastSub">Ignoring it doesn’t make it cheaper.</p>
-    </section>
-
-    <!-- LOG FORM -->
-    <section class="card">
+    <div class="card">
       <h3>Log Today</h3>
+      <input placeholder="Enter amount" />
+      <button class="primary-btn">Log Spend</button>
+    </div>
 
-      <input id="amountInput" type="number" placeholder="Enter amount" />
-
-      <div class="row">
-        <select id="category">
-          <option>Food</option>
-          <option>Travel</option>
-          <option>Shopping</option>
-          <option>Other</option>
-        </select>
-
-        <select id="mood">
-          <option>Neutral</option>
-          <option>Proud</option>
-          <option>Guilty</option>
-          <option>Happy</option>
-          <option>Impulsive</option>
-        </select>
-      </div>
-
-      <button id="saveBtn" class="primary">Save entry</button>
-      <p id="status" class="success"></p>
-    </section>
-
-  </div>
-
-  <script type="module" src="./js/dashboard.js"></script>
+  </main>
 </body>
 </html>
-
