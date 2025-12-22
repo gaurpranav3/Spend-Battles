@@ -1,18 +1,15 @@
-/* RESET */
 * {
   box-sizing: border-box;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI",
-    Roboto, Inter, sans-serif;
+  font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont;
 }
 
 body {
   margin: 0;
-  padding: 0;
   background: linear-gradient(135deg, #f4f3ff, #f8f7ff);
   color: #111;
 }
 
-/* HEADER */
+/* TOP BAR */
 .top-bar {
   max-width: 420px;
   margin: 20px auto 10px;
@@ -20,18 +17,6 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
-}
-
-.logout-btn {
-  background: none;
-  border: none;
-  color: #6b6b6b;
-  font-size: 14px;
-  cursor: pointer;
-}
-
-.logout-btn:hover {
-  text-decoration: underline;
 }
 
 /* CONTAINER */
@@ -57,7 +42,6 @@ body {
 /* TEXT */
 h3 {
   margin: 0 0 10px;
-  font-size: 18px;
 }
 
 h4 {
@@ -75,7 +59,6 @@ h4 {
 .amount {
   font-size: 32px;
   font-weight: 700;
-  margin: 6px 0;
 }
 
 .amount-small {
@@ -83,35 +66,21 @@ h4 {
   font-weight: 600;
 }
 
-/* STATS GRID */
+/* STATS */
 .stats {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(2, 1fr);
   gap: 12px;
 }
 
-/* FORM */
-input,
-select {
+/* INPUTS */
+input {
   width: 100%;
   padding: 14px;
   margin-top: 10px;
   border-radius: 12px;
   border: 1px solid #ddd;
   font-size: 15px;
-}
-
-input:focus,
-select:focus {
-  outline: none;
-  border-color: #7b6cff;
-}
-
-/* ROW */
-.row {
-  display: flex;
-  gap: 10px;
-  margin-top: 10px;
 }
 
 /* BUTTON */
@@ -128,37 +97,10 @@ select:focus {
   cursor: pointer;
 }
 
-.primary-btn:hover {
-  opacity: 0.95;
-}
-
-/* STATUS */
-.status-text {
-  margin-top: 10px;
-  font-size: 14px;
-  color: #2ecc71;
-}
-
-/* MOBILE SAFETY */
-@media (max-width: 480px) {
-  .stats {
-    grid-template-columns: 1fr;
-  }
-}
-
-.progress-bar {
-  width: 100%;
-  height: 12px;
-  background: #eee;
-  border-radius: 999px;
-  overflow: hidden;
-  margin-top: 8px;
-}
-
-#progressFill {
-  height: 100%;
-  width: 0%;
-  background: #2ecc71;
-  border-radius: 999px;
-  transition: width 0.4s ease;
+/* LOGOUT */
+.logout-btn {
+  background: none;
+  border: none;
+  color: #6b6b6b;
+  cursor: pointer;
 }
