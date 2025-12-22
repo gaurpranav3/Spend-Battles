@@ -2,11 +2,9 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Spend Battles — Login</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
-  <!-- CSS -->
-  <link rel="stylesheet" href="/css/style.css" />
+  <title>Spend Battles</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="css/style.css" />
 
   <!-- Supabase -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -16,38 +14,24 @@
 <body>
   <main class="container" style="min-height:100vh;display:flex;align-items:center;">
     <section class="card big" style="width:100%;">
-      <h2 style="text-align:center;margin-bottom:6px;">Spend Battles</h2>
+      <h3 style="text-align:center;">Spend Battles</h3>
       <p class="muted" style="text-align:center;margin-bottom:20px;">
         Track daily spends. Beat your own target.
       </p>
 
-      <input
-        id="email"
-        type="email"
-        placeholder="Email address"
-      />
+      <input id="email" type="email" placeholder="Email" />
+      <input id="password" type="password" placeholder="Password" />
 
-      <input
-        id="password"
-        type="password"
-        placeholder="Password"
-      />
-
-      <button class="primary-btn" onclick="signUp()">
-        Create account
-      </button>
+      <button class="primary-btn" onclick="signUp()">Create account</button>
 
       <p class="muted" style="text-align:center;margin-top:12px;">
         Already have an account?
-        <span
-          style="color:#6f6bff;cursor:pointer;"
-          onclick="signIn()"
-        >
+        <span style="color:#6f6bff;cursor:pointer;" onclick="signIn()">
           Sign in
         </span>
       </p>
 
-      <p id="authStatus" class="status-text" style="color:#e74c3c;"></p>
+      <p id="authStatus" class="status-text"></p>
     </section>
   </main>
 
