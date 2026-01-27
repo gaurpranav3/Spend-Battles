@@ -1,89 +1,25 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8" />
-  <title>Weekly Plan • Spend Battles</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link rel="stylesheet" href="./css/style.css" />
+  <title>Lock Weekly Goal</title>
+  <link rel="stylesheet" href="css/style.css">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="js/supabase.js"></script>
 </head>
 <body>
 
-  <div class="app">
+<div class="container">
+  <div class="card big">
+    <h3>Lock Weekly Spend</h3>
+    <p class="muted">No edits. No excuses.</p>
 
-    <section class="card big">
-      <h2>📅 Weekly Commitment</h2>
-      <p class="muted">
-        Set this once. No edits. No excuses.
-      </p>
-    </section>
+    <input id="weeklySpend" type="number" placeholder="Weekly limit ₹">
+    <button class="primary-btn" onclick="saveWeekly()">Lock Goal 🔒</button>
 
-    <section class="card">
-      <label>Weekly Spend Goal (₹)</label>
-      <input id="weeklySpend" type="number" placeholder="e.g. 1000" />
-
-      <label>Weekly Saving Goal (₹)</label>
-      <input id="weeklySave" type="number" placeholder="e.g. 500" />
-
-      <p class="muted small">
-        Daily target = Weekly Spend ÷ 7  
-        <br>
-        (We’ll remind you when you mess up)
-      </p>
-
-      <button id="savePlan" class="primary">
-        Lock my plan 🔒
-      </button>
-
-      <p id="status" class="success"></p>
-    </section>
-
+    <p id="status" class="muted"></p>
   </div>
+</div>
 
-  <script type="module">
-    import { supabase } from "./js/supabase.js";
-
-    function getMonday(date = new Date()) {
-      const d = new Date(date);
-      const day = d.getDay();
-      const diff = d.getDate() - day + (day === 0 ? -6 : 1);
-      return new Date(d.setDate(diff)).toISOString().split("T")[0];
-    }
-
-    document.getElementById("savePlan").onclick = async () => {
-      const weeklySpend = Number(document.getElementById("weeklySpend").value);
-      const weeklySave = Number(document.getElementById("weeklySave").value);
-      const status = document.getElementById("status");
-
-      if (!weeklySpend || weeklySpend <= 0) {
-        status.innerText = "Enter a valid weekly spend";
-        return;
-      }
-
-      const { data: userData } = await supabase.auth.getUser();
-      const user = userData.user;
-      if (!user) return;
-
-      const monday = getMonday();
-
-      const { error } = await supabase
-        .from("weekly_plan")
-        .insert({
-          user_id: user.id,
-          week_start: monday,
-          weekly_spend: weeklySpend,
-          weekly_save: weeklySave || 0
-        });
-
-      if (error) {
-        status.innerText = error.message;
-      } else {
-        status.innerText = "Plan locked. Don’t embarrass yourself now 😤";
-        setTimeout(() => {
-          window.location.href = "/home.html";
-        }, 1000);
-      }
-    };
-  </script>
-
+<script type="module" src="js/weekly.js"></script>
 </body>
 </html>
