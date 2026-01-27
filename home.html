@@ -1,48 +1,45 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8" />
-  <title>Spend Battles</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <link rel="stylesheet" href="css/style.css" />
-
-  <!-- Supabase -->
+  <title>Weekly Discipline</title>
+  <link rel="stylesheet" href="css/style.css">
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="js/supabase.js"></script>
 </head>
-
 <body>
-  <div class="top-bar">
-    <h3>👋 Welcome</h3>
-    <button class="logout-btn" onclick="sb.auth.signOut()">Logout</button>
+
+<div class="top-bar">
+  <h3>Weekly Discipline</h3>
+  <button class="logout-btn" onclick="logout()">Logout</button>
+</div>
+
+<div class="container">
+
+  <div class="card big">
+    <h4>Today</h4>
+    <div class="amount">₹ <span id="todaySpend">0</span></div>
+    <p id="statusText" class="muted"></p>
   </div>
 
-  <main class="container">
-
-    <div class="card big">
-      <h4>Today’s Spend</h4>
-      <div class="amount">₹ 0</div>
-      <p class="muted">Log honestly.</p>
-    </div>
-
-    <div class="stats">
-      <div class="card">
-        <h4>This Week</h4>
-        <div class="amount-small">₹ 0</div>
-      </div>
-
-      <div class="card">
-        <h4>Daily Target</h4>
-        <div class="amount-small">₹ 0</div>
-      </div>
-    </div>
-
+  <div class="stats">
     <div class="card">
-      <h3>Log Today</h3>
-      <input placeholder="Enter amount" />
-      <button class="primary-btn">Log Spend</button>
+      <h4>Daily Limit</h4>
+      <div class="amount-small">₹ <span id="dailyLimit">0</span></div>
     </div>
+    <div class="card">
+      <h4>This Week</h4>
+      <div class="amount-small">₹ <span id="weekSpend">0</span></div>
+    </div>
+  </div>
 
-  </main>
+  <div class="card">
+    <input id="amount" type="number" placeholder="Today's spend ₹">
+    <button class="primary-btn" onclick="saveSpend()">Lock Today</button>
+    <p id="saveStatus" class="muted"></p>
+  </div>
+
+</div>
+
+<script type="module" src="js/dashboard.js"></script>
 </body>
 </html>
