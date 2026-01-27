@@ -1,23 +1,37 @@
 async function signUp() {
-  const email = emailInput();
-  const password = passwordInput();
+  const email = document.getElementById("email").value;
+  const password = document.getElementById("password").value;
   const status = document.getElementById("authStatus");
 
-  const { error } = await supabase.auth.signUp({ email, password });
-  status.innerText = error ? error.message : "Account created. Sign in.";
+  status.innerText = "Creating account...";
+
+  const { error } = await window.db.auth.signUp({
+    email,
+    password,
+  });
+
+  if (error) {
+    status.innerText = error.message;
+  } else {
+    status.innerText = "Account created. Now sign in.";
+  }
 }
 
 async function signIn() {
-  const email = emailInput();
-  const password = passwordInput();
+  const email = document.getElementById("email").value;
+  const password = document.getElementById("password").value;
+  const status = document.getElementById("authStatus");
 
-  const { error } = await supabase.auth.signInWithPassword({ email, password });
-  if (!error) window.location.href = "home.html";
-}
+  status.innerText = "Signing in...";
 
-function emailInput() {
-  return document.getElementById("email").value;
-}
-function passwordInput() {
-  return document.getElementById("password").value;
+  const { error } = await window.db.auth.signInWithPassword({
+    email,
+    password,
+  });
+
+  if (error) {
+    status.innerText = error.message;
+  } else {
+    window.location.href = "home.html";
+  }
 }
