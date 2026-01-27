@@ -1,38 +1,27 @@
-function getMonday(date = new Date()) {
-  const d = new Date(date);
-  const day = d.getDay();
-  const diff = d.getDate() - day + (day === 0 ? -6 : 1);
-  return new Date(d.setDate(diff));
-}
+import { getMonday } from "./utils.js";
 
-async function saveWeeklyPlan() {
-  const spend = Number(document.getElementById("weeklySpend").value);
-  const save = Number(document.getElementById("weeklySave").value);
-  const status = document.getElementById("planStatus");
+async function saveWeekly() {
+  const weeklySpend = Number(document.getElementById("weeklySpend").value);
+  const status = document.getElementById("status");
 
-  if (!spend || spend <= 0) {
-    status.innerText = "Enter a valid weekly spend";
+  if (!weeklySpend || weeklySpend <= 0) {
+    status.innerText = "Enter valid amount";
     return;
   }
 
-  const { data: userData } = await supabase.auth.getUser();
-  const user = userData.user;
-  if (!user) return;
+  const { data } = await supabase.auth.getUser();
+  const user = data.user;
 
-  const monday = getMonday().toISOString().split("T")[0];
+  const monday = getMonday();
 
-  const { error } = await supabase.from("weekly_plan").insert([
-    {
-      user_id: user.id,
-      week_start: monday,
-      weekly_spend: spend,
-      weekly_save: save || 0,
-    },
-  ]);
+  const { error } = await supabase.from("weekly_plan").upsert({
+    user_id: user.id,
+    week_start: monday,
+    weekly_spend: weeklySpend
+  });
 
-  if (error) {
-    status.innerText = error.message;
-  } else {
-    window.location.href = "/home.html";
-  }
+  if (error) status.innerText = error.message;
+  else window.location.href = "home.html";
 }
+
+window.saveWeekly = saveWeekly;
